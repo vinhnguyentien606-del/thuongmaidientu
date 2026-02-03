@@ -1,11 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    xin chào các bạn
+let data = getData();
+    data.push({ student, subject, score });
+    saveData(data);
+    renderTable();
+
+    document.getElementById("studentName").value = "";
+    document.getElementById("subjectName").value = "";
+    document.getElementById("score").value = "";
+}
+
+function editData(index, field, value) {
+    let data = getData();
+    if (field === "score") {
+        data[index][field] = parseFloat(value) || 0;
+    } else {
+        data[index][field] = value.trim();
+    }
+    saveData(data);
+    updateAverage();
+}
+
+function deleteRow(index) {
+    let data = getData();
+    data.splice(index, 1);
+    saveData(data);
+    renderTable();
+}
+
+function updateAverage() {
+    let rows = document.querySelectorAll("#tableBody tr");
+    let data = {};
+
+    rows.forEach(row => {
+        let name = row.cells[0].innerText.trim();
+        let score = parseFloat(row.cells[2].innerText) || 0;
+
+        if (!data[name]) {
+            data[name] = { total: 0, count: 0 };
+        }
+        data[name].total += score;
+        data[name].count++;
+    });
+
+    rows.forEach(row => {
+        let name = row.cells[0].innerText.trim();
+        let avg = (data[name].total / data[name].count).toFixed(2);
+        row.cells[3].innerText = avg;
+        row.cells[4].innerText = avg >= 5 ? "Đạt" : "Chưa đạt";
+    });
+}
+
+window.onload = renderTable;
+</script>
+
 </body>
 </html>
